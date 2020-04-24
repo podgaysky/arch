@@ -31,6 +31,12 @@ mount /dev/sda1 /mnt/efi
 pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
-# ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
-# hwclock --systohc
-# locale-gen
+ln -sf /usr/share/zoneinfo/Europe/Minsk /etc/localtime
+hwclock --systohc
+locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "arch" > /etc/hostname
+echo "
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	myhostname.localdomain	myhostname" >> /etc/hosts
