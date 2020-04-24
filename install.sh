@@ -5,9 +5,9 @@ g # create gtp partition table
 n # new partition
 1 # partition number 1
   # default - start at beginning of disk
-+550M # 550 MB efi parttion
++550M # 550 MB boot parttion
 t # change parttion type
-1 # efi type
+4 # boot type
 n # new partition
 2 # partition number 2
   # default - start at beginning of disk
@@ -27,21 +27,25 @@ mkswap /dev/sda2
 swapon /dev/sda2
 mkfs.ext4 /dev/sda3
 mount /dev/sda3 /mnt
-mount /dev/sda1 /mnt/efi
-pacstrap /mnt base linux linux-firmware
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+mkdir /mnt/boot/efi
+pacstrap /mnt base linux linux-firmware mc base-devel grub networkmanager os-prober dialog wpa_supplicant efibootmgr
 genfstab -U /mnt >> /mnt/etc/fstab
-arch-chroot /mnt
+arch-chroot /mnt /bin/bash <<EOF
 ln -sf /usr/share/zoneinfo/Europe/Minsk /etc/localtime
 hwclock --systohc
-locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
+locale-gen
+mkinitcpio -P
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub
+grub-mkconfig -o /boot/grub/grub.cfg
 echo "arch" > /etc/hostname
 echo "
 127.0.0.1	localhost
 ::1		localhost
 127.0.1.1	myhostname.localdomain	myhostname" >> /etc/hosts
-mkdir -p esp/EFI/arch
-cp -a /boot/vmlinuz-linux esp/EFI/arch/
-cp -a /boot/initramfs-linux.img esp/EFI/arch/
-cp -a /boot/initramfs-linux-fallback.img esp/EFI/arch/
 passwd
+EOF
+
+
