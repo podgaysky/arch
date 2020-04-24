@@ -1,22 +1,23 @@
 ls /sys/firmware/efi/efivars
 timedatectl set-ntp true
-(
-echo g #
-echo 1 #
-echo   #
-echo +550M #
-echo t #
-echo 1 #
-echo n #
-echo 2 #
-echo   #
-echo +1024M #
-echo t #
-echo 2 #
-echo 19 #
-echo n #
-echo 3 #
-echo   #
-echo   #
-echo w #
-) | fdisk /dev/sda
+sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/sda
+g
+n
+1
+
++550M
+t
+1
+n
+2
+
++1024M
+t
+2
+19
+n
+3
+
+
+w
+EOF
