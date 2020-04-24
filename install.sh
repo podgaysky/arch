@@ -1,6 +1,6 @@
 ls /sys/firmware/efi/efivars
 timedatectl set-ntp true
-fdisk -u /dev/whatever <<EOF
+fdisk -u /dev/sda <<EOF
 g
 1
 
