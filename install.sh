@@ -7,7 +7,7 @@ echo "Enter root password:"
 read -s root_password
 echo "Confirm root password:"
 read -s root_password_confirm
-if [ $root_password -ne $root_password_confirm ] ; then echo "passwords do not match run the script again" && exit 1 ; fi
+if [ $root_password -ne $root_password_confirm ] ; then echo "Passwords do not match run the script again" && exit 1 ; fi
 timedatectl set-ntp true
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/$drive_name
 g # create gtp partition table
@@ -38,6 +38,7 @@ mkfs.ext4 /dev/$drive_name\3
 mount /dev/$drive_name\3 /mnt
 mkdir /mnt/boot
 mount /dev/$drive_name\1 /mnt/boot
+sed -i '/Server = http:\/\/mirror.datacenter.by\/pub\/archlinux\/$repo\/os\/$arch/d' /etc/pacman.d/mirrorlist
 pacstrap /mnt base linux linux-firmware mc base-devel networkmanager intel-ucode
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt /bin/bash <<EOF
