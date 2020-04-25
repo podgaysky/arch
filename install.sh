@@ -38,7 +38,7 @@ mount /dev/sda4 /mnt
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
 mkdir /mnt/boot/efi
-mount /dev/sda3 /mnt/boot/efi
+mount /dev/sda2 /mnt/boot/efi
 pacstrap /mnt base linux linux-firmware mc base-devel networkmanager os-prober dialog wpa_supplicant efibootmgr
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
