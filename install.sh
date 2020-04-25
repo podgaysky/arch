@@ -1,4 +1,5 @@
 ls /sys/firmware/efi/efivars
+test=test
 timedatectl set-ntp true
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/sda
 g # create gtp partition table
@@ -29,7 +30,7 @@ mkfs.ext4 /dev/sda3
 mount /dev/sda3 /mnt
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
-pacstrap /mnt base linux linux-firmware mc base-devel intel-ucode
+pacstrap /mnt base linux linux-firmware mc base-devel networkmanager intel-ucode
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt /bin/bash <<EOF
 ln -sf /usr/share/zoneinfo/Europe/Minsk /etc/localtime
@@ -46,9 +47,10 @@ bootctl --path=/boot install
 echo "title Arch Linux
 linux /vmlinuz-linux
 initrd  /intel-ucode.img
-initrd /initramfs-linux.img 
-options root=PARTUUID=XXXX-XXXX-XXXX rw" > /boot/loader/entries/arch.conf
+initrd /initramfs-linux.img" > /boot/loader/entries/arch.conf
+echo "options root=PARTUUID=$(blkid | grep /dev/sda3 | awk -F '"' '{print $2}') rw" >> /boot/loader/entries/arch.conf
 echo "root:temppass" | chpasswd
+echo $test
 EOF
 
 
