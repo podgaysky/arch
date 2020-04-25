@@ -31,7 +31,6 @@ mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
 pacstrap /mnt base linux linux-firmware mc base-devel intel-ucode
 genfstab -U /mnt >> /mnt/etc/fstab
-arch-chroot /mnt
 arch-chroot /mnt /bin/bash <<EOF
 ln -sf /usr/share/zoneinfo/Europe/Minsk /etc/localtime
 hwclock --systohc
