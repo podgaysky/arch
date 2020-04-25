@@ -47,7 +47,7 @@ echo "title Arch Linux
 linux /vmlinuz-linux
 initrd  /intel-ucode.img
 initrd /initramfs-linux.img 
-options root=PARTUUID=XXXX-XXXX-XXXX rw > /boot/loader/entries/arch.conf
+options root=PARTUUID=XXXX-XXXX-XXXX rw" > /boot/loader/entries/arch.conf
 echo "root:temppass" | chpasswd
 EOF
 
