@@ -22,30 +22,34 @@ n # new partition
 w # write the partition table
 q # and we're done
 EOF
-mkfs.fat -F32 /dev/sda1
+mkfs.vfat /dev/sda1
 mkswap /dev/sda2
 swapon /dev/sda2
 mkfs.ext4 /dev/sda3
 mount /dev/sda3 /mnt
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
-pacstrap /mnt base linux linux-firmware mc base-devel networkmanager os-prober dialog wpa_supplicant efibootmgr
+pacstrap /mnt base linux linux-firmware mc base-devel intel-ucode
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
-# arch-chroot /mnt /bin/bash <<EOF
-# ln -sf /usr/share/zoneinfo/Europe/Minsk /etc/localtime
-# hwclock --systohc
-# echo "LANG=en_US.UTF-8" > /etc/locale.conf
-# locale-gen
-# mkinitcpio -P
-# grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub
-# grub-mkconfig -o /boot/grub/grub.cfg
-# echo "arch" > /etc/hostname
-# echo "
-# 127.0.0.1	localhost
-# ::1		localhost
-# 127.0.1.1	arch.localdomain	arch" >> /etc/hosts
-# echo "root:temppass" | chpasswd
-# EOF
+arch-chroot /mnt /bin/bash <<EOF
+ln -sf /usr/share/zoneinfo/Europe/Minsk /etc/localtime
+hwclock --systohc
+sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' ./locale.gen
+locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "arch" > /etc/hostname
+echo "
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	arch.localdomain	arch" >> /etc/hosts
+bootctl --path=/boot install
+echo "title Arch Linux
+linux /vmlinuz-linux
+initrd  /intel-ucode.img
+initrd /initramfs-linux.img 
+options root=PARTUUID=XXXX-XXXX-XXXX rw > /boot/loader/entries/arch.conf
+echo "root:temppass" | chpasswd
+EOF
 
 
