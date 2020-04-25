@@ -30,22 +30,23 @@ mount /dev/sda3 /mnt
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
 mkdir /mnt/boot/efi
-pacstrap /mnt base linux linux-firmware mc base-devel grub networkmanager os-prober dialog wpa_supplicant efibootmgr
+pacstrap /mnt base linux linux-firmware mc base-devel networkmanager os-prober dialog wpa_supplicant efibootmgr
 genfstab -U /mnt >> /mnt/etc/fstab
-arch-chroot /mnt /bin/bash <<EOF
-ln -sf /usr/share/zoneinfo/Europe/Minsk /etc/localtime
-hwclock --systohc
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
-locale-gen
-mkinitcpio -P
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub
-grub-mkconfig -o /boot/grub/grub.cfg
-echo "arch" > /etc/hostname
-echo "
-127.0.0.1	localhost
-::1		localhost
-127.0.1.1	arch.localdomain	arch" >> /etc/hosts
-echo "root:temppass" | chpasswd
-EOF
+arch-chroot /mnt
+# arch-chroot /mnt /bin/bash <<EOF
+# ln -sf /usr/share/zoneinfo/Europe/Minsk /etc/localtime
+# hwclock --systohc
+# echo "LANG=en_US.UTF-8" > /etc/locale.conf
+# locale-gen
+# mkinitcpio -P
+# grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub
+# grub-mkconfig -o /boot/grub/grub.cfg
+# echo "arch" > /etc/hostname
+# echo "
+# 127.0.0.1	localhost
+# ::1		localhost
+# 127.0.1.1	arch.localdomain	arch" >> /etc/hosts
+# echo "root:temppass" | chpasswd
+# EOF
 
 
