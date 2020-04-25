@@ -5,6 +5,9 @@ echo -n Enter computer name:
 read computer_name
 echo -n Enter root password:
 read -s root_password
+echo -n Confirm root password:
+read -s root_password_confirm
+if [ $root_password -ne $root_password_confirm ] ; then echo "passwords do not match run the script again" && exit 1 ; fi
 timedatectl set-ntp true
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/$drive_name
 g # create gtp partition table
